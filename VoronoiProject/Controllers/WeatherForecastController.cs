@@ -25,10 +25,12 @@ namespace VoronoiProject.Controllers {
 
 			// Call recursive function
 			var voronoi = await RecursiveVoronoi(sorted);
+
+			return Ok();
 		}
 
-		public async Task RecursiveVoronoi(IEnumerable<Point> points) {
-
+		public async Task<DCEL> RecursiveVoronoi(IEnumerable<Point> points) {
+			return new DCEL();
 		}
 	}
 }

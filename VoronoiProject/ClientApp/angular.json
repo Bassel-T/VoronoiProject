@@ -129,5 +129,8 @@
       }
     }
   },
-  "defaultProject": "VoronoiProject"
+  "defaultProject": "VoronoiProject",
+  "cli": {
+    "analytics": "44070604-e31f-4d63-a55e-0b43fb425429"
+  }
 }
