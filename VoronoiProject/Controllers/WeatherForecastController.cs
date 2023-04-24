@@ -30,7 +30,7 @@ namespace VoronoiProject.Controllers {
 		}
 
 		public async Task<DCEL> RecursiveVoronoi(IEnumerable<Point> points) {
-			return new DCEL();
+			return await Task.FromResult(new DCEL());
 		}
 	}
 }
