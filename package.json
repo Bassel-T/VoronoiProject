@@ -1,4 +1,10 @@
 {
+  "name": "mitri-toubbeh-voronoi",
+  "description": "A project for TAMU CSCE 620 - Spring 2023",
+  "version": "1.0.0",
+  "engines": {
+    "node": "16.18.0"
+  },
   "dependencies": {
     "chart.js": "^4.2.1"
   }
