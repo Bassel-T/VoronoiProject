@@ -1,5 +1,5 @@
-namespace VoronoiProject {
-	public class Program {
+namespace SampleProj {
+	public class VoronoiProject {
 		public static void Main(string[] args) {
 			var builder = WebApplication.CreateBuilder(args);
 
