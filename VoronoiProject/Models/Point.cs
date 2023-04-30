@@ -6,5 +6,24 @@
 	public class Point {
 		public double X { get; set; } = 0;
 		public double Y { get; set; } = 0;
+
+		// List of Voronoi Points outlining the region
+		public List<Point> VoronoiPoints { get; set; } = new List<Point>();
+
+		public override bool Equals(object? obj) {
+			if (obj == null)
+				return false;
+
+			if (obj.GetType() != typeof(Point)) {
+				return false;
+			}
+
+			Point other = (Point)obj;
+			return X == other.X && Y == other.Y;
+		}
+
+		public override string ToString() {
+			return $"({X},{Y})";
+		}
 	}
 }

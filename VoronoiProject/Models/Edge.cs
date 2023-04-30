@@ -4,20 +4,41 @@
 	/// Represents an edge in the DCEL, connects two points to one another
 	/// </summary>
 	public class Edge {
-		// The endpoints 
-		public Point? P1 { get; set; } = null;
-		public Point? P2 { get; set; } = null;
+		// Endpoints 
+		public Point? Start { get; set; }
+		public Point? End { get; set; }
 
-		// For a point to infinity, save the angle of the edge
-		public double? Angle1 { get; set; } = null;
-		public double? Angle2 { get; set; } = null;
+		// For infinite rays
+		public double? Angle { get; set; }
 
-		// The next counter-clockwise edge to traverse
-		public Edge? E1 { get; set; } = null;
-		public Edge? E2 { get; set; } = null;
+		// Temporary, for when there are only two input points
+		public Point? Midpoint { get; set; }
 
-		// The left and right faces (voronoi cells) of the edge
-		public Face? F1 { get; set; } = null;
-		public Face? F2 { get; set; } = null;
+		// The two "faces" it separates
+		public Point? Point1 { get; set; }
+		public Point? Point2 { get; set; }
+
+		// Data about the intersection position
+		public double IntersectX { get; set; }
+		public double IntersectY { get; set; }
+
+		public override bool Equals(object? obj) {
+			if (obj?.GetType() == typeof(Edge)) {
+				
+				Edge other = (Edge)obj;
+				var equal = true;
+				if (Start != null && End != null) {
+					equal = Start.Equals(other.Start) && End.Equals(other.End);
+					equal |= Start.Equals(other.End) && End.Equals(other.Start);
+				} else if (Start != null && Angle != null)
+					equal = Start.Equals(other.Start) && Angle == other.Angle;
+				else if (Midpoint != null && Angle != null)
+					equal = Midpoint.Equals(other.Midpoint) && Angle == other.Angle;
+
+				return equal;
+			}
+
+			return false;
+		}
 	}
 }

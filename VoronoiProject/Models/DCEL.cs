@@ -1,9 +1,17 @@
 ﻿namespace VoronoiProject.Models {
+	/// <summary>
+	/// Doubly-Connected Edge List
+	/// </summary>
 	public class DCEL {
 
-		public List<Point> Points { get; set; } = new List<Point>();
+		// List of Voronoi Points in the DCEL
+		public List<Point> VoronoiPoints { get; set; } = new List<Point>();
+
+		// List of Edges in the DCEL
 		public List<Edge> Edges { get; set; } = new List<Edge>();
-		public List<Face> Faces { get; set; } = new List<Face>();
+
+		// List of Faces in the DCEL
+		public List<Point> InputPoints { get; set; } = new List<Point>();
 
 	}
 }
