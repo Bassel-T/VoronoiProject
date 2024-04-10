@@ -1,14 +1,15 @@
-﻿namespace VoronoiProject.Models {
-	
-	/// <summary>
-	/// As simple object with x and y coordinates
-	/// </summary>
-	public class Point {
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using VoronoiProject.Services;
+
+namespace VoronoiProject.Models {
+
+    /// <summary>
+    /// As simple object with x and y coordinates
+    /// </summary>
+    public class Point {
 		public double X { get; set; } = 0;
 		public double Y { get; set; } = 0;
-
-		// List of Voronoi Points outlining the region
-		public List<Point> VoronoiPoints { get; set; } = new List<Point>();
 
 		public override bool Equals(object? obj) {
 			if (obj == null)
@@ -21,9 +22,5 @@
 			Point other = (Point)obj;
 			return X == other.X && Y == other.Y;
 		}
-
-		public override string ToString() {
-			return $"({X},{Y})";
-		}
-	}
+    }
 }

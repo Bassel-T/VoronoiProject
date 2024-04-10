@@ -1,3 +1,5 @@
+using VoronoiProject.Services;
+
 namespace SampleProj {
 	public class VoronoiProject {
 		public static void Main(string[] args) {

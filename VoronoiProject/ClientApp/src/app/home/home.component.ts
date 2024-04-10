@@ -46,6 +46,12 @@ export class HomeComponent {
       })
     };
 
+    this.callCalculator(null).subscribe(x => {
+      console.log(x);
+    });
+
+    // return;
+
     this.submitRequest(data, options_).subscribe(x => {
       this.downloadText = '';
 
@@ -62,12 +68,12 @@ export class HomeComponent {
             if (edge.start !== null && edge.end !== null) {
               drawLine(edge.start.x, edge.start.y, edge.end.x, edge.end.y);
             } else if (edge.start !== null) {
-              drawAngle(edge.start.x, edge.start.y, edge.angle + Math.PI / 2.0);
+              drawAngle(edge.start.x, edge.start.y, edge.angle);
             } else if (edge.end !== null) {
-              drawAngle(edge.end.x, edge.end.y, edge.angle + Math.PI / 2.0);
+              drawAngle(edge.end.x, edge.end.y, edge.angle + Math.PI);
             } else {
-              drawAngle(edge.midpoint.x, edge.midpoint.y, edge.angle + Math.PI / 2.0);
-              drawAngle(edge.midpoint.x, edge.midpoint.y, edge.angle - Math.PI / 2.0);
+              drawAngle(edge.midpoint.x, edge.midpoint.y, edge.angle);
+              drawAngle(edge.midpoint.x, edge.midpoint.y, edge.angle + Math.PI);
             }
           });
 
@@ -96,10 +102,15 @@ export class HomeComponent {
             const ctx = chart.ctx;
             const yStart = yScale.getPixelForValue(y1);
             const xStart = xScale.getPixelForValue(x1);
+
+            const yRatio = yScale.height / (yScale.max - yScale.min);
+            const xRatio = xScale.width / (xScale.max - xScale.min);
+            const xyRatio = yRatio / xRatio;
+
             ctx.save();
             ctx.beginPath();
             ctx.moveTo(xStart, yStart);
-            ctx.lineTo(xStart - 10000 * Math.cos(angle), yStart - 10000 * Math.sin(angle));
+            ctx.lineTo(xStart + 10000 * Math.cos(angle), yStart - 10000 * Math.sin(angle) * xyRatio);
             ctx.setLineDash([5, 5]);
             ctx.strokeStyle = 'blue';
             ctx.lineWidth = 1;
@@ -139,6 +150,10 @@ export class HomeComponent {
 
   submitRequest(data, options_): Observable<DCEL> {
     return this.http.post<DCEL>(this.base + 'voronoi', data);
+  }
+
+  callCalculator(data): Observable<number> {
+    return this.http.get<number>(this.base + 'voronoi');
   }
 
   blobToText(blob: any): Observable<string> {

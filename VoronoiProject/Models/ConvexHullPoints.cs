@@ -1,12 +1,16 @@
-﻿namespace VoronoiProject.Models {
+﻿using Newtonsoft.Json;
+using VoronoiProject.Services;
+
+namespace VoronoiProject.Models {
 
 	/// <summary>
 	/// An input point with a flag associated with it to indicate which half
 	/// </summary>
 	public class ConvexHullPoints : Point {
 
-		// The input point associated with the convex hull input
-		public Point InputPoint { get; set; }
+        // The input point associated with the convex hull input
+        [JsonConverter(typeof(PointConverter))]
+        public Point InputPoint { get; set; }
 		
 		// Set if the object is on the left half of the convex hull, used for creating bridge
 		public bool IsLeftHalf { get; set; }

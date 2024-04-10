@@ -1,22 +1,30 @@
-﻿namespace VoronoiProject.Models {
+﻿using System.Text.Json.Serialization;
+using VoronoiProject.Services;
+
+namespace VoronoiProject.Models {
 	
 	/// <summary>
 	/// Represents an edge in the DCEL, connects two points to one another
 	/// </summary>
 	public class Edge {
-		// Endpoints 
-		public Point? Start { get; set; }
-		public Point? End { get; set; }
+        // Endpoints 
+        [JsonConverter(typeof(PointConverter))]
+        public Point? Start { get; set; }
+        [JsonConverter(typeof(PointConverter))]
+        public Point? End { get; set; }
 
 		// For infinite rays
 		public double? Angle { get; set; }
 
-		// Temporary, for when there are only two input points
-		public Point? Midpoint { get; set; }
+        // Temporary, for when there are only two input points
+        [JsonConverter(typeof(PointConverter))]
+        public Point? Midpoint { get; set; }
 
-		// The two "faces" it separates
-		public Point? Point1 { get; set; }
-		public Point? Point2 { get; set; }
+        // The two "faces" it separates
+        [JsonConverter(typeof(PointConverter))]
+        public Point? Point1 { get; set; }
+        [JsonConverter(typeof(PointConverter))]
+        public Point? Point2 { get; set; }
 
 		// Data about the intersection position
 		public double IntersectX { get; set; }

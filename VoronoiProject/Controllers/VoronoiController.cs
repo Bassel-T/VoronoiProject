@@ -51,11 +51,11 @@ namespace VoronoiProject.Controllers {
 				&& edge.Angle > Math.PI
 				&& edge.Angle <= 2 * Math.PI
 				&& edge.End.Y <= edge.Point1.Y
-				&& edge.End.Y <= edge.Point2.Y) {
+				&& edge.End.Y <= edge.Point2.Y) { 
 					// Angle is negative but shouldn't be
 					edge.Angle -= Math.PI;
 				}
-			});
+            });
 
 			return Ok(voronoi);
 		}
@@ -124,9 +124,9 @@ namespace VoronoiProject.Controllers {
 				var bisect = Bisector(current);
 				return new DCEL {
 					InputPoints = left.InputPoints.Union(right.InputPoints).ToList(),
-					Edges = new List<Edge> {
+					Edges = left.Edges.Concat(right.Edges.Concat(new List<Edge> {
 						bisect
-					},
+					})).ToList(),
 					VoronoiPoints = new List<Point>()
 				};
 			}
@@ -165,18 +165,25 @@ namespace VoronoiProject.Controllers {
 
 				_logger.LogInformation($"Intersection found! Angle = {firstIntersection.Angle}, Point1 = {firstIntersection.Point1}, End = {firstIntersection.Point2}");
 
+				// Grab where the intersection starts (if it has one) or the midpoint of the edge
 				var firstInterpoint = firstIntersection.Start ?? firstIntersection.Midpoint;
 
 				firstIntersection.IntersectX = firstInterpoint.X + (firstIntersection.IntersectY - firstInterpoint.Y)
 																	/ Math.Tan(firstIntersection.Angle.Value);
 
-				if (Math.Ceiling(firstIntersection.Angle.Value / Math.PI) - firstIntersection.Angle - Math.PI < 1e-4) {
+				if (Math.Abs(firstIntersection.Angle.Value % Math.PI) < 1e-4) {
 					_logger.LogInformation("Angle is multiple of pi");
 					firstIntersection.IntersectX = bisector.Midpoint.X + (firstIntersection.IntersectY - bisector.Midpoint.Y)
 																/ Math.Tan(bisector.Angle.Value);
 				}
 
-				lastIntersection = new Point {
+                // JSON doesn't like infinities
+                if (double.IsInfinity(firstIntersection.IntersectX))
+                {
+                    firstIntersection.IntersectX = double.MaxValue * Math.Sign(firstIntersection.IntersectX);
+                }
+
+                lastIntersection = new Point {
 					X = firstIntersection.IntersectX,
 					Y = firstIntersection.IntersectY
 				};
@@ -357,20 +364,27 @@ namespace VoronoiProject.Controllers {
 			var targ = target.Start ?? target.Midpoint;
 			var start = source.Start ?? source.Midpoint;
 
-			// If the angles match but are not the same line, return negative infinity
-			if (source.Angle == target.Angle && !start.Equals(targ)) { return double.NegativeInfinity; }
+			// If the angles match but are not the same line, return close to negative infinity
+			if (source.Angle == target.Angle && !start.Equals(targ)) { return double.MinValue; }
 
 			// Horizontals break the formula
 			if (source.Angle == Math.PI) { return start.Y; }
 			if (target.Angle == Math.PI) { return targ.Y; }
 
-			if (targ == null) { return double.NegativeInfinity; }
+			if (targ == null) { return double.MinValue; }
 
 			var sourceArctan = 1.0 / Math.Tan(source.Angle.Value);
 			var targetArctan = 1.0 / Math.Tan(target.Angle.Value);
 
-			return (start.X - targ.X + targ.Y * targetArctan - start.Y * sourceArctan)
+			var interY = (start.X - targ.X + targ.Y * targetArctan - start.Y * sourceArctan)
 					/ (targetArctan - sourceArctan);
+
+			// JSON doesn't like infinity
+			if (double.IsInfinity(interY)) {
+				interY = double.MaxValue * Math.Sign(interY);
+			}
+
+			return interY;
 		}
 	}
 }
